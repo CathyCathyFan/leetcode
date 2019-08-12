@@ -124,6 +124,8 @@ namespace Solutions
            string s = "pwwkew";
             if (s == null || s.Length == 0)  return 0;
 
+            int count = 0;
+
             return count;
         }
     }
