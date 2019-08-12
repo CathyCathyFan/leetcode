@@ -3,17 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
+using System.Globalization;
 
 namespace Solutions
 {
-    
+
     public class Easy
     {
         public static void Main()
         {
+            //string s = "cbbd";
+            //string s = "ac";
+            string s = "bb";
+            LongestPalindrome(s);
+
+
             Console.Read();
         }
-       
+
         public int[] TwoSum()
         {
             //Case 1
@@ -84,7 +91,6 @@ namespace Solutions
             return null;
         }
 
-        
         public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
         {
             if (l1 == null || l2 == null)
@@ -118,15 +124,176 @@ namespace Solutions
             return l;
         }
 
-        
-        public int LengthOfLongestSubstring()
+        static public int LengthOfLongestSubstring()
         {
-           string s = "pwwkew";
-            if (s == null || s.Length == 0)  return 0;
+            string s = "abcbcadefg";
+            if (s == null || s.Length == 0) return 0;
 
             int count = 0;
 
+
+            #region Solution 1 Loop
+            //for (int i = 0; i < s.Length; i++)
+            //{
+            //    for (int j = i; j < s.Length; j++)
+            //    {
+            //        if (!HasDupChar(s.Substring(i, j - i+1)))
+            //        {
+            //            count = Math.Max(count, j - i+1);
+            //        }
+            //        else
+            //        {
+            //            break;
+            //        }
+            //    }
+            //}
+            #endregion
+
+            #region Solution 2 Window
+            int j = 1;
+            for (int i = 0; i < s.Length;)
+            {
+
+                while (j < s.Length && !HasDupChar(s.Substring(i, j - i + 1)))
+                {
+                    Console.WriteLine(string.Format("j={0}", j));
+                    Console.WriteLine(s.Substring(i, j - i + 1));
+
+                    count = Math.Max(count, j - i + 1);
+                    j++;
+                }
+
+                if (j < s.Length)
+                {
+                    i = i + s.Substring(i, j - i).IndexOf(s[j]) + 1;
+                    Console.WriteLine(string.Format("i= {0}", i));
+                    continue;
+                }
+
+                break;
+            }
+            #endregion
+
             return count;
+        }
+
+
+        static public string LongestPalindrome(string s)
+        {
+            #region solution 1 loop
+            //if (s == null) return null;
+            //if (s.Length <= 1 || isP(s)) return s;
+            //int length = 1;
+            //string rel = s.Substring(0, 1);
+
+
+            //for (int i = 0; i < s.Length; i++)
+            //{
+            //    int move = 1;
+
+            //    while ((i - move) >= 0 && (i + move) < s.Length && isP(s.Substring(i - move, move * 2 + 1)))
+            //    {
+            //        if (length < move * 2 + 1)
+            //        {
+            //            length = move * 2 + 1;
+            //            rel = s.Substring(i - move, move * 2 + 1);
+            //        }
+
+            //        move++;
+            //    }
+
+            //    move = 1;
+
+            //    while ((i - move) >= 0 && (i + move - 1) < s.Length && isP(s.Substring(i - move, move * 2)))
+            //    {
+            //        if (length < move * 2)
+            //        {
+            //            length = move * 2;
+            //            rel = s.Substring(i - move, move * 2);
+            //        }
+
+            //        move++;
+            //    }
+            //}
+
+            return rel;
+            #endregion
+
+            #region Solution 2 simpler than 1
+            //if (s == null || s.Length == 0)
+            //    return null;
+            //if (s.Length == 1)
+            //    return s;
+
+            //string res = s.Substring(0, 1);
+
+            //for (int i = 0; i < s.Length; i++)
+            //{
+            //    // get longest palindrome with center of i
+            //    string tmp = helper(s, i, i);
+            //    if (tmp.Length > res.Length)
+            //    {
+            //        res = tmp;
+            //    }
+
+            //    // get longest palindrome with center of i, i+1
+            //    tmp = helper(s, i, i + 1);
+            //    if (tmp.Length > res.Length)
+            //    {
+            //        res = tmp;
+            //    }
+            //}
+
+            //return res;
+            #endregion
+        }
+
+        static private bool HasDupChar(string str)
+        {
+            HashSet<char> hs = new HashSet<char>();
+
+            foreach (char c in str)
+            {
+                if (hs.Contains(c))
+                {
+                    return true;
+                }
+
+                hs.Add(c);
+            }
+
+            return false;
+        }
+
+        static private bool isP(string str)
+        {
+            if (str == null || str.Length == 0)
+                return false;
+            int i = 0;
+            while (i < str.Length / 2)
+            {
+                if (!(str[i] == str[str.Length - i - 1]))
+                {
+                    break;
+                }
+
+                i++;
+            }
+
+            if (i < str.Length / 2)
+                return false;
+            else
+                return true;
+        }
+
+        static public string helper(string s, int begin, int end)
+        {
+            while (begin >= 0 && end <= s.Length - 1 && s[begin] == s[end])
+            {
+                begin--;
+                end++;
+            }
+            return s.Substring(begin + 1, end - begin - 1);
         }
     }
 
